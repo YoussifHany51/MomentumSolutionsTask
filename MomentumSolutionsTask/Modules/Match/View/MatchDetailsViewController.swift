@@ -25,6 +25,7 @@ class MatchDetailsViewController: UIViewController {
     private func setupBindings() {
         viewModel.matchDetails.subscribe(onNext: { [weak self] details in
             guard details != nil else { return }
+            print(details!)
         }).disposed(by: disposeBag)
     }
 

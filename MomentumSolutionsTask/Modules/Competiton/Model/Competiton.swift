@@ -18,6 +18,7 @@ struct Competition: Codable {
     let area: Area
     let currentSeason: Season?
     let seasons: [Season]?
+    let numberOfAvailableSeasons: Int
 }
 
 struct Area: Codable {

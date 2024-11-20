@@ -18,22 +18,19 @@ class CompetitionsDetailsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel.matches
-            .subscribe(onNext: { matches in
-                print("Matches received: \(matches)")
-            }, onError: { error in
-                print("Error: \(error)")
-            }).disposed(by: disposeBag)
+        tableView.register(UINib(nibName: "CompetitionsDetailsTableViewCell", bundle: nil), forCellReuseIdentifier: "CompetitonsDetailsCell")
+        tableView.rowHeight = 120
         setupBindings()
         if let id = competitionId {
             viewModel.fetchCompetitionDetails(competitionId: id)
         }
     }
     private func setupBindings() {
-        viewModel.matches.bind(to: tableView.rx.items(cellIdentifier: "MatchCell")) { index, match, cell in
-            let homeTeamName = match.homeTeam?.name
-            let awayTeamName = match.awayTeam?.name
-            cell.textLabel?.text = "\(homeTeamName) vs \(awayTeamName)"
+        viewModel.matches.bind(to: tableView.rx.items(cellIdentifier: "CompetitonsDetailsCell",cellType: CompetitionsDetailsTableViewCell.self)) { index, match, cell in
+            cell.homeNameLabel.text = match.homeTeam?.name
+            cell.homeShortLabel.text = match.homeTeam?.shortName
+            cell.awayTeamLabel.text = match.awayTeam?.name
+            cell.awayShortLabel.text = match.awayTeam?.shortName
         }.disposed(by: disposeBag)
         
         tableView.rx.modelSelected(Match.self)

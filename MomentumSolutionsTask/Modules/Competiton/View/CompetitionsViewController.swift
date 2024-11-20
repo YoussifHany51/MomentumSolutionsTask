@@ -17,14 +17,22 @@ class CompetitionsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.title = "Competitions"
+        tableView.register(UINib(nibName: "CompetitionsTableViewCell", bundle: nil), forCellReuseIdentifier: "CompetitionsCell")
+        tableView.rowHeight = 120
         setupBindings()
         viewModel.fetchCompetitions()
     }
     
     private func setupBindings() {
-        viewModel.competitions.bind(to: tableView.rx.items(cellIdentifier: "CompetitionCell")) { index, model, cell in
-            cell.textLabel?.text = model.name
-        }.disposed(by: disposeBag)
+        viewModel.competitions
+            .bind(to: tableView.rx.items(cellIdentifier: "CompetitionsCell", cellType: CompetitionsTableViewCell.self)) { index, model, cell in
+                cell.codeLabel.text = model.code
+                cell.nameLabel.text = model.name
+                cell.avaiSeasonLabel.text = "Available Seasons: \(model.numberOfAvailableSeasons)"
+                cell.currMatchDayLabel.text = "Match Day: \(model.currentSeason?.currentMatchday ?? 0)"
+            }
+            .disposed(by: disposeBag)
         
         tableView.rx.modelSelected(Competition.self)
             .subscribe(onNext: { [weak self] competition in

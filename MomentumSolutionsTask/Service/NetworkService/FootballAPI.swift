@@ -33,9 +33,6 @@ class FootballAPI {
                        observer.onError(NSError(domain: "DataError", code: -1, userInfo: [NSLocalizedDescriptionKey: "No data received"]))
                        return
                    }
-                   if let jsonString = String(data: data, encoding: .utf8) {
-                       print("API Response: \(jsonString)") // This will print the raw response
-                   }
                    do {
                        let competitionsResponse = try JSONDecoder().decode(CompetitionsResponse.self, from: data)
                        if let competitions = competitionsResponse.competitions {
