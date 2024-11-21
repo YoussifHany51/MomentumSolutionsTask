@@ -18,8 +18,15 @@ class MatchDetailsViewModel {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] details in
                 self?.matchDetails.accept(details)
+                Caching.shared.saveMatchDetailsToCache(details)
             }, onError: { error in
                 print("Error fetching match details: \(error)")
+                if let cachedMatchDetails = Caching.shared.loadMatchDetailsFromCache() {
+                    self.matchDetails.accept(cachedMatchDetails)
+                    print("Loaded match Details from cache")
+                } else {
+                    print("No cached match Details available")
+                }
             })
             .disposed(by: disposeBag)
     }

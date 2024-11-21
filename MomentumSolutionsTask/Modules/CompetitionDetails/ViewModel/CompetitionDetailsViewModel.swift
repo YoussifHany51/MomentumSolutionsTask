@@ -17,8 +17,15 @@ class CompetitionDetailsViewModel {
         FootballAPI.shared.fetchCompetitionDetails(competitionId: competitionId)
             .subscribe(onNext: { matches in
                 self.matches.accept(matches)
+                Caching.shared.saveCompetitionDetailsToCache(matches)
             }, onError: { error in
                 print("Error fetching competition details: \(error)")
+                if let cachedMatchDetails = Caching.shared.loadCompetitionDetailsFromCache() {
+                    self.matches.accept(cachedMatchDetails)
+                    print("Loaded competition Details from cache")
+                } else {
+                    print("No cached competition Details available")
+                }
             })
             .disposed(by: disposeBag)
     }

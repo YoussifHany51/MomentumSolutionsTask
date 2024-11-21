@@ -15,10 +15,17 @@ class CompetitionsViewModel {
 
     func fetchCompetitions() {
         FootballAPI.shared.fetchCompetitions()
-            .subscribe(onNext: { competitions in
-                self.competitions.accept(competitions)
+            .subscribe(onNext: { [weak self] competitions in
+                self?.competitions.accept(competitions)
+                Caching.shared.saveCompetitionsToCache(competitions)
             }, onError: { error in
                 print("Error fetching competitions: \(error)")
+                if let cachedCompetitions = Caching.shared.loadCompetitionsFromCache() {
+                    self.competitions.accept(cachedCompetitions)
+                    print("Loaded competitions from cache")
+                } else {
+                    print("No cached competitions available")
+                }
             })
             .disposed(by: disposeBag)
     }
