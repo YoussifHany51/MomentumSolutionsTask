@@ -17,15 +17,16 @@ class MatchDetailsViewModel {
         FootballAPI.shared.fetchMatchDetails(matchId: matchId)
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] details in
+                print("Fetched match details: \(details)")
                 self?.matchDetails.accept(details)
                 Caching.shared.saveMatchDetailsToCache(details)
-            }, onError: { error in
+            }, onError: { [weak self] error in
                 print("Error fetching match details: \(error)")
-                if let cachedMatchDetails = Caching.shared.loadMatchDetailsFromCache() {
-                    self.matchDetails.accept(cachedMatchDetails)
-                    print("Loaded match Details from cache")
+                if let cachedMatchDetails = Caching.shared.loadMatchDetailsFromCache(matchId: matchId) {
+                    self?.matchDetails.accept(cachedMatchDetails)
+                    print("Loaded match details from cache")
                 } else {
-                    print("No cached match Details available")
+                    print("No cached match details available")
                 }
             })
             .disposed(by: disposeBag)

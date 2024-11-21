@@ -24,18 +24,20 @@ struct MatchDetails: Codable {
     let homeTeam: Team?
     let awayTeam: Team?
     let score: Score?
+    let matchday: Int?
 
     struct Team: Codable {
         let name: String?
         let shortName: String?
+        let crest: String?
     }
 
     struct Score: Codable {
         let fullTime: Result
     }
     struct Result: Codable {
-        let homeTeam: Int?
-        let awayTeam: Int?
+        let home: Int?
+        let away: Int?
     }
 
     struct Competition: Codable {

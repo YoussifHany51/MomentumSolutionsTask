@@ -40,6 +40,20 @@ class CompetitionsDetailsViewController: UIViewController {
                 self?.navigationController?.pushViewController(matchDetailsVC, animated: true)
             })
             .disposed(by: disposeBag)
+        
+        viewModel.isCacheEmpty
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] isCacheEmpty in
+                if isCacheEmpty {
+                    self?.showNoCacheAlert()
+                }
+            })
+            .disposed(by: disposeBag)
     }
-
+                      
+    private func showNoCacheAlert() {
+        let alert = UIAlertController(title: "No Cached Data", message: "No cached competition details are available. Please connect to the internet to fetch data.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
 }

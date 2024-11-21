@@ -17,11 +17,13 @@ class CompetitionsViewModel {
         FootballAPI.shared.fetchCompetitions()
             .subscribe(onNext: { [weak self] competitions in
                 self?.competitions.accept(competitions)
-                Caching.shared.saveCompetitionsToCache(competitions)
-            }, onError: { error in
+                competitions.forEach { competition in
+                    Caching.shared.saveCompetitionToCache(competition)
+                }
+            }, onError: { [weak self] error in
                 print("Error fetching competitions: \(error)")
                 if let cachedCompetitions = Caching.shared.loadCompetitionsFromCache() {
-                    self.competitions.accept(cachedCompetitions)
+                    self?.competitions.accept(cachedCompetitions)
                     print("Loaded competitions from cache")
                 } else {
                     print("No cached competitions available")

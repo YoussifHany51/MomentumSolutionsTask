@@ -33,6 +33,18 @@ class MatchDetailsViewController: UIViewController {
     
     @IBOutlet weak var refNationality: UILabel!
     
+    @IBOutlet weak var venueLabel: UILabel!
+    
+    @IBOutlet weak var homeImg: UIImageView!
+    
+    @IBOutlet weak var awayImg: UIImageView!
+    
+    @IBOutlet weak var homeScoreLabel: UILabel!
+    
+    @IBOutlet weak var matchDayLabel: UILabel!
+    
+    @IBOutlet weak var awayScoreLabel: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Match Details"
@@ -58,8 +70,30 @@ class MatchDetailsViewController: UIViewController {
                 self?.statusLabel.text = details.status
                 self?.refName.text = details.referees?.first?.name
                 self?.refNationality.text = details.referees?.first?.nationality
+                self?.venueLabel.text = details.venue?.name
+                self?.matchDayLabel.text = "MD:\(details.matchday ?? 0)"
+                self?.homeScoreLabel.text = "\(details.score?.fullTime.home ?? 0)"
+                self?.awayScoreLabel.text = "\(details.score?.fullTime.away ?? 0)"
+                self?.awayImg.loadImage(from: details.awayTeam?.crest)
+                self?.homeImg.loadImage(from: details.homeTeam?.crest)
             })
             .disposed(by: disposeBag)
     }
 
+}
+extension UIImageView {
+    func loadImage(from urlString: String?) {
+        guard let urlString = urlString, let url = URL(string: urlString) else {
+            return
+        }
+        // Download image data asynchronously
+        URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
+            guard let data = data, let image = UIImage(data: data) else {
+                return
+            }
+            DispatchQueue.main.async {
+                self?.image = image
+            }
+        }.resume()
+    }
 }
