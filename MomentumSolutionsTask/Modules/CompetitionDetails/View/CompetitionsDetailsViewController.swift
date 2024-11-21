@@ -33,9 +33,9 @@ class CompetitionsDetailsViewController: UIViewController {
             cell.awayShortLabel.text = match.awayTeam?.shortName
         }.disposed(by: disposeBag)
         
-        tableView.rx.modelSelected(Match.self)
+        tableView.rx.modelSelected(MatchDetails.self)
             .subscribe(onNext: { [weak self] match in
-                let matchDetailsVC = MatchDetailsViewController()
+                let matchDetailsVC = self?.storyboard?.instantiateViewController(withIdentifier: "MatchDetailsViewController") as! MatchDetailsViewController
                 matchDetailsVC.matchId = match.id
                 self?.navigationController?.pushViewController(matchDetailsVC, animated: true)
             })

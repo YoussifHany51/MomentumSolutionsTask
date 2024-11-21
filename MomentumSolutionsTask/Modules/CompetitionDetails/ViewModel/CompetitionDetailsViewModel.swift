@@ -11,7 +11,7 @@ import RxCocoa
 
 class CompetitionDetailsViewModel {
     private let disposeBag = DisposeBag()
-    let matches = BehaviorRelay<[Match]>(value: [])
+    let matches = BehaviorRelay<[MatchDetails]>(value: [])
 
     func fetchCompetitionDetails(competitionId: Int) {
         FootballAPI.shared.fetchCompetitionDetails(competitionId: competitionId)

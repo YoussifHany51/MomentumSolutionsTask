@@ -15,8 +15,9 @@ class MatchDetailsViewModel {
 
     func fetchMatchDetails(matchId: Int) {
         FootballAPI.shared.fetchMatchDetails(matchId: matchId)
-            .subscribe(onNext: { details in
-                self.matchDetails.accept(details)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] details in
+                self?.matchDetails.accept(details)
             }, onError: { error in
                 print("Error fetching match details: \(error)")
             })

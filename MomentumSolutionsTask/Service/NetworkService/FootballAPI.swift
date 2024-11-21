@@ -53,7 +53,7 @@ class FootballAPI {
 
     
     // MARK: - Fetch Competition Details (Matches of a Competition)
-    func fetchCompetitionDetails(competitionId: Int) -> Observable<[Match]> {
+    func fetchCompetitionDetails(competitionId: Int) -> Observable<[MatchDetails]> {
         let url = URL(string: "https://api.football-data.org/v4/competitions/\(competitionId)/matches")!
         
         return Observable.create { observer in
